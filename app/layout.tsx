@@ -14,11 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://codesinfo-abraji-oficina-grupo-2.burgos.chatgpt.site"),
-  title: "Evidência em pauta — laboratório de checagem",
-  description: "Demonstração interativa com alegações simuladas e registros verificáveis do PubMed para apoiar a apuração jornalística.",
+  title: "Evidência em pauta — busca científica para jornalistas",
+  description: "Busca ao vivo na literatura do PubMed e demonstração transparente de apoio à apuração jornalística em saúde.",
   openGraph: {
     title: "Evidência em pauta",
-    description: "Da alegação à evidência: uma demonstração para apoiar a apuração jornalística em saúde.",
+    description: "Pesquise literatura científica no PubMed para apoiar a apuração jornalística em saúde.",
     images: ["/og.png"],
   },
   twitter: { card: "summary_large_image", images: ["/og.png"] },
