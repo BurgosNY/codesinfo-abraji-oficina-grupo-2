@@ -1,100 +1,67 @@
-# vinext-starter
+# Evidência em pauta
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+Protótipo do Grupo 2 da oficina de construção com IA do Hackaton Codesinfo, realizado no 21º Congresso da Abraji.
 
-## Prerequisites
+A ferramenta demonstra um fluxo de apoio a jornalistas que investigam alegações sobre câncer e saúde. Ela organiza uma alegação, uma amostra de literatura científica verificável, possíveis fontes acadêmicas e uma sugestão de pauta sem produzir um veredito editorial automático.
 
-- Node.js `>=22.13.0`
+## O que o protótipo faz
 
-## Quick Start
+- recebe um tema ou uma alegação em texto livre;
+- aproxima a consulta de um dos cenários demonstrativos disponíveis;
+- separa leitura da alegação, evidências científicas e fontes para a pauta;
+- aponta método, autores, ano e link de registros reais do PubMed;
+- explica por que cada pesquisador aparece como possível fonte;
+- explicita incertezas, limitações da amostra e a necessidade de confirmação editorial;
+- não infere atributos sensíveis nem oferece diagnóstico ou recomendação de tratamento.
+
+## Estado atual
+
+As alegações são simuladas e não têm origem real. Os artigos e links exibidos são verificáveis no PubMed, mas foram selecionados previamente: a versão publicada ainda não faz busca aberta na internet, não consulta o PubMed em tempo real e não equivale a uma revisão sistemática.
+
+- [Abrir a demonstração](https://codesinfo-abraji-oficina-grupo-2.burgos.chatgpt.site)
+- [Ler o registro das interações no Slack](public/historico-interacoes.html)
+
+## Como rodar localmente
+
+### Pré-requisitos
+
+- Node.js 22.13 ou mais recente;
+- npm.
+
+### Instalação e desenvolvimento
 
 ```bash
-npm install
+npm ci
 npm run dev
+```
+
+Abra no navegador o endereço informado pelo terminal.
+
+### Validação e execução de produção
+
+```bash
+npm test
 npm run build
+npm run start
 ```
 
-This starter does not use `wrangler.jsonc`.
+A interface está em `app/page.tsx`; os estilos ficam em `app/globals.css`.
 
-## Included Shape
+## Roadmap possível
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+- [ ] Integrar consultas reais e rastreáveis ao PubMed e à SciELO.
+- [ ] Definir e manter uma lista pública de fontes usadas para localizar alegações.
+- [ ] Registrar URL, data, captura e contexto de circulação de cada alegação monitorada.
+- [ ] Criar monitoramento de narrativas, crescimento de menções e alertas editoriais.
+- [ ] Adicionar filtros por país, estado, idioma, período e repercussão regional.
+- [ ] Tornar o ranking explicável, separando a análise do conteúdo da reputação geral do veículo.
+- [ ] Verificar vínculo atual, identidade e contato profissional de possíveis fontes.
+- [ ] Permitir salvar casos, comparar evidências e exportar um dossiê de apuração.
+- [ ] Implantar revisão humana, trilha de auditoria e mecanismos de correção.
 
-## Workspace Auth Headers
+## Princípios editoriais
 
-Signed-in visitors receive both `oai-authenticated-user-id` and `oai-authenticated-user-email`. Private Sites require every visitor to sign in; public Sites may also have anonymous visitors, for whom neither header is present.
-
-The user ID is stable for the same user on the same Site and different across Sites. Email and name are intended for display or contact purposes.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const userId = requestHeaders.get("oai-authenticated-user-id");
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
-```
-
-## Optional Dispatch-Owned ChatGPT Sign-In
-
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
-
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
-
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
-
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+- A ferramenta não determina automaticamente se uma alegação é verdadeira ou falsa.
+- Uma amostra de artigos não substitui revisão sistemática nem avaliação especializada.
+- Toda conclusão deve preservar fonte, método, atualidade e grau de incerteza.
+- A decisão de pauta e a conclusão editorial continuam humanas.
